@@ -2,162 +2,109 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Pixel Dress-Up Studio 🎀</title>
+    <title>Nebulosa Procedural 💜</title>
     <style>
         :root {
-            --piel: #ffdbac;
-            --lavanda: #b39ddb;
-            --obscuro: #2c2c2c;
-            --rosa: #f48fb1;
+            --bg: #050210;
+            --color1: #7e57c2; /* Violeta */
+            --color2: #b39ddb; /* Lavanda */
+            --color3: #f48fb1; /* Rosa suave */
+            --color4: #4a148c; /* Morado profundo */
         }
 
         body {
-            background-color: #f3e5f5;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            height: 100vh;
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: 'Courier New', Courier, monospace;
         }
 
-        /* CONTENEDOR PRINCIPAL */
-        .game-container {
-            display: flex;
-            background: white;
-            padding: 20px;
-            border: 4px solid var(--obscuro);
-            box-shadow: 10px 10px 0px var(--lavanda);
-        }
-
-        /* ÁREA DEL PERSONAJE */
-        .character-preview {
-            width: 200px;
-            height: 300px;
-            background: #eee;
+        /* EL CONTENEDOR DE LA MAGIA */
+        .nebula-container {
             position: relative;
-            border: 2px solid #ccc;
-            margin-right: 20px;
-            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            /* El truco pro: desenfoque masivo + contraste alto */
+            filter: blur(80px) contrast(150%);
+            background: var(--bg);
         }
 
-        /* --- CUERPO BASE (PROGRAMADO) --- */
-        .base {
+        /* MANCHAS DE GAS (CAPAS DE COLOR) */
+        .blob {
             position: absolute;
-            bottom: 50px; left: 75px;
-            width: 50px; height: 120px;
-            background: var(--piel);
-            border-radius: 10px;
-        }
-        .cabeza {
-            position: absolute;
-            bottom: 170px; left: 70px;
-            width: 60px; height: 60px;
-            background: var(--piel);
-            border-radius: 15px;
+            border-radius: 50%;
+            opacity: 0.6;
+            mix-blend-mode: screen; /* Para que los colores se sumen */
+            animation: move 20s infinite alternate ease-in-out;
         }
 
-        /* --- CAPAS DE ROPA --- */
-        .layer {
+        /* Definimos cada mancha de gas */
+        .blob-1 {
+            width: 500px; height: 500px;
+            background: var(--color1);
+            top: 10%; left: 10%;
+            animation-duration: 25s;
+        }
+
+        .blob-2 {
+            width: 600px; height: 600px;
+            background: var(--color2);
+            bottom: 10%; right: 10%;
+            animation-duration: 30s;
+            animation-delay: -5s;
+        }
+
+        .blob-3 {
+            width: 400px; height: 400px;
+            background: var(--color3);
+            top: 40%; left: 30%;
+            animation-duration: 20s;
+            animation-delay: -2s;
+        }
+
+        .blob-4 {
+            width: 700px; height: 700px;
+            background: var(--color4);
+            bottom: 20%; left: 50%;
+            animation-duration: 35s;
+        }
+
+        /* ANIMACIÓN DE MOVIMIENTO ORGÁNICO */
+        @keyframes move {
+            0% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(100px, -50px) scale(1.2); }
+            66% { transform: translate(-80px, 100px) scale(0.8); }
+            100% { transform: translate(50px, 50px) scale(1.1); }
+        }
+
+        /* TEXTO ENCIMA (Sin el filtro de desenfoque) */
+        .overlay-text {
             position: absolute;
-            display: none; /* Ocultas por defecto */
             z-index: 10;
-        }
-
-        /* Ropa Programada con CSS */
-        #camisa-lila { 
-            width: 54px; height: 60px; 
-            background: var(--lavanda); 
-            bottom: 110px; left: 73px; 
-            border-radius: 5px;
-        }
-        #camisa-negra { 
-            width: 54px; height: 60px; 
-            background: var(--obscuro); 
-            bottom: 110px; left: 73px; 
-        }
-        #falda-rosa {
-            width: 60px; height: 40px;
-            background: var(--rosa);
-            bottom: 75px; left: 70px;
-            border-radius: 0 0 10px 10px;
-        }
-
-        /* MENÚ DE SELECCIÓN */
-        .menu {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .category-title {
-            font-weight: bold;
-            font-size: 0.8rem;
-            color: var(--purpura);
-            margin-bottom: 5px;
-        }
-
-        button {
-            padding: 8px;
-            cursor: pointer;
-            border: 2px solid var(--obscuro);
-            background: white;
-            transition: 0.2s;
-        }
-
-        button:hover {
-            background: var(--lavanda);
-            transform: translateX(5px);
+            font-family: 'Courier New', monospace;
+            color: white;
+            letter-spacing: 15px;
+            text-transform: uppercase;
+            font-size: 1.2rem;
+            text-shadow: 0 0 10px var(--color2);
+            pointer-events: none;
         }
     </style>
 </head>
 <body>
 
-    <div class="game-container">
-        <div class="character-preview">
-            <div class="cabeza"></div>
-            <div class="base"></div>
+    <div class="overlay-text">Nebulosa Gemini</div>
 
-            <div id="camisa-lila" class="layer"></div>
-            <div id="camisa-negra" class="layer"></div>
-            <div id="falda-rosa" class="layer"></div>
-        </div>
-
-        <div class="menu">
-            <div class="category-title">Partes de Arriba</div>
-            <button onclick="poner('camisa-lila', 'tops')">Top Lavanda</button>
-            <button onclick="poner('camisa-negra', 'tops')">Top Dark</button>
-            <button onclick="quitar('tops')">❌ Quitar Top</button>
-
-            <div class="category-title">Partes de Abajo</div>
-            <button onclick="poner('falda-rosa', 'bottoms')">Falda Rosa</button>
-            <button onclick="quitar('bottoms')">❌ Quitar Falda</button>
-        </div>
+    <div class="nebula-container">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+        <div class="blob blob-4"></div>
     </div>
 
-    <script>
-        // Diccionario para saber qué ropa pertenece a qué categoría
-        const categorias = {
-            'camisa-lila': 'tops',
-            'camisa-negra': 'tops',
-            'falda-rosa': 'bottoms'
-        };
-
-        function poner(idRopa, categoria) {
-            // Primero quitamos lo que haya en esa categoría para que no se encime
-            quitar(categoria);
-            // Mostramos la prenda seleccionada
-            document.getElementById(idRopa).style.display = 'block';
-        }
-
-        function quitar(categoria) {
-            // Buscamos todas las capas y ocultamos las de la categoría
-            for (let id in categorias) {
-                if (categorias[id] === categoria) {
-                    document.getElementById(id).style.display = 'none';
-                }
-            }
-        }
-    </script>
 </body>
 </html>
