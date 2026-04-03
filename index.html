@@ -2,109 +2,111 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Nebulosa Procedural 💜</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nebulosa Inmersiva Gemini 🌌</title>
     <style>
-        :root {
-            --bg: #050210;
-            --color1: #7e57c2; /* Violeta */
-            --color2: #b39ddb; /* Lavanda */
-            --color3: #f48fb1; /* Rosa suave */
-            --color4: #4a148c; /* Morado profundo */
-        }
-
-        body {
+        body, html {
             margin: 0;
             padding: 0;
-            background-color: var(--bg);
-            height: 100vh;
+            width: 100%;
+            height: 100%;
             overflow: hidden;
+            background-color: #050210; /* Negro profundo */
             display: flex;
             justify-content: center;
             align-items: center;
+            font-family: 'Courier New', Courier, monospace;
         }
 
-        /* EL CONTENEDOR DE LA MAGIA */
-        .nebula-container {
-            position: relative;
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            /* El truco pro: desenfoque masivo + contraste alto */
-            filter: blur(80px) contrast(150%);
-            background: var(--bg);
+            z-index: 1;
         }
 
-        /* MANCHAS DE GAS (CAPAS DE COLOR) */
-        .blob {
-            position: absolute;
-            border-radius: 50%;
-            opacity: 0.6;
-            mix-blend-mode: screen; /* Para que los colores se sumen */
-            animation: move 20s infinite alternate ease-in-out;
-        }
-
-        /* Definimos cada mancha de gas */
-        .blob-1 {
-            width: 500px; height: 500px;
-            background: var(--color1);
-            top: 10%; left: 10%;
-            animation-duration: 25s;
-        }
-
-        .blob-2 {
-            width: 600px; height: 600px;
-            background: var(--color2);
-            bottom: 10%; right: 10%;
-            animation-duration: 30s;
-            animation-delay: -5s;
-        }
-
-        .blob-3 {
-            width: 400px; height: 400px;
-            background: var(--color3);
-            top: 40%; left: 30%;
-            animation-duration: 20s;
-            animation-delay: -2s;
-        }
-
-        .blob-4 {
-            width: 700px; height: 700px;
-            background: var(--color4);
-            bottom: 20%; left: 50%;
-            animation-duration: 35s;
-        }
-
-        /* ANIMACIÓN DE MOVIMIENTO ORGÁNICO */
-        @keyframes move {
-            0% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(100px, -50px) scale(1.2); }
-            66% { transform: translate(-80px, 100px) scale(0.8); }
-            100% { transform: translate(50px, 50px) scale(1.1); }
-        }
-
-        /* TEXTO ENCIMA (Sin el filtro de desenfoque) */
-        .overlay-text {
-            position: absolute;
+        #ui-overlay {
+            position: relative;
             z-index: 10;
-            font-family: 'Courier New', monospace;
-            color: white;
-            letter-spacing: 15px;
+            color: rgba(179, 157, 219, 0.8); /* Lavanda suave */
+            text-align: center;
+            letter-spacing: 10px;
             text-transform: uppercase;
-            font-size: 1.2rem;
-            text-shadow: 0 0 10px var(--color2);
-            pointer-events: none;
+            text-shadow: 0 0 15px #7e57c2;
+            pointer-events: none; /* No interfiere con el ratón */
         }
     </style>
 </head>
 <body>
 
-    <div class="overlay-text">Nebulosa Gemini</div>
-
-    <div class="nebula-container">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
-        <div class="blob blob-4"></div>
+    <div id="ui-overlay">
+        <h1>Nebulosa Gemini</h1>
+        <p style="font-size: 0.8rem; letter-spacing: 2px;">Mueve el ratón para interactuar con el gas cósmico</p>
     </div>
 
-</body>
-</html>
+    <canvas id="nebulaCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('nebulaCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        let particles = [];
+        const numParticles = 2000; // ¡Súbelo si tu PC es potente!
+        const interactionRadius = 150; // Radio de efecto del ratón
+
+        const mouse = { x: -100, y: -100 };
+
+        // Definimos la paleta de colores pro
+        const colors = [
+            '#7e57c2', // Violeta principal
+            '#b39ddb', // Lavanda suave
+            '#f48fb1', // Rosa suave (magenta claro)
+            '#4a148c'  /* Morado profundo */
+        ];
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            initParticles(); // Reiniciamos partículas para que cubran todo
+        }
+
+        window.addEventListener('resize', resize);
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        // Clase Partícula: Cada "puntito" de la nebulosa
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.baseX = this.x; // Guardamos posición original
+                this.baseY = this.y;
+                this.size = Math.random() * 2 + 0.5; // Tamaño variable
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.speed = Math.random() * 1 + 0.2; // Velocidad de retorno
+                this.friction = Math.random() * 0.9 + 0.05; // Fricción
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                // Añadimos un sutil resplandor a cada partícula
+                ctx.shadowBlur = this.size * 5;
+                ctx.shadowColor = this.color;
+                ctx.fill();
+            }
+
+            update() {
+                // Lógica de interacción con el ratón (Repulsión)
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx*dx + dy*dy);
+
+                if (distance < interactionRadius) {
+                    let force = (interaction
