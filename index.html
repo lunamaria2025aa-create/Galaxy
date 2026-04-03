@@ -2,191 +2,123 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Mapa Estelar: GALAXY-LUNA 🌌</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GALAXY-LUNA 🌌 Pro System</title>
     <style>
         :root {
             --purpura: #7e57c2;
             --lavanda: #b39ddb;
-            --neon: #e1bee7;
+            --espacio: #050210;
         }
 
-        body {
-            margin: 0;
-            background: #050210; /* Negro profundo espacial */
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            background-color: var(--espacio);
             color: white;
-            font-family: 'Courier New', Courier, monospace; /* Fuente estilo código */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden;
+        }
+
+        /* --- FONDO DE ESTRELLAS ANIMADO --- */
+        #starfield {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0;
+            background: radial-gradient(circle at center, #1a0b2e 0%, #050210 100%);
+        }
+
+        /* --- CAPA DEL MAPA GALAXY-LUNA --- */
+        #galaxy-map {
+            position: relative;
+            z-index: 10;
+            width: 100%; height: 100%;
+            transition: transform 1.2s cubic-bezier(0.7, 0, 0.3, 1), opacity 1s;
+        }
+
+        .header {
+            position: absolute;
+            top: 40px; width: 100%;
+            text-align: center;
+            letter-spacing: 12px;
+            font-size: 2.5rem;
+            color: var(--lavanda);
+            text-shadow: 0 0 20px var(--purpura);
+            text-transform: uppercase;
+        }
+
+        /* --- ESTILO DE LOS PLANETAS --- */
+        .planet {
+            position: absolute;
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.4s;
             display: flex;
             flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* --- PANTALLA 1: EL MAPA GALAXY-LUNA --- */
-        #star-map {
-            width: 100vw;
-            height: 100vh;
-            background: url('stardust.png'); /* Opcional: un fondo de estrellas */
-            position: relative;
-            cursor: crosshair;
-            transition: opacity 1s;
+        .planet:hover {
+            transform: scale(1.4);
+            z-index: 100;
         }
 
-        .galaxy-title {
-            position: absolute;
-            top: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 2.5rem;
-            color: var(--neon);
-            text-transform: uppercase;
-            letter-spacing: 10px;
-            text-shadow: 0 0 20px var(--purpura);
-        }
-
-        /* ESTILO PRO PARA PLANETAS REGADOS */
-        .planet-icon {
-            position: absolute;
-            cursor: pointer;
-            transition: transform 0.3s;
-            text-align: center;
-        }
-
-        .planet-icon img {
-            width: 50px;
-            height: 50px;
+        .planet-sphere {
+            width: 50px; height: 50px;
             border-radius: 50%;
-            box-shadow: 0 0 15px var(--lavanda);
+            box-shadow: inset -10px -10px 20px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
         }
 
-        .planet-icon:hover {
-            transform: scale(1.3);
-        }
-
-        .planet-name {
-            display: block;
-            margin-top: 10px;
-            font-size: 0.8rem;
-            color: var(--lavanda);
-            text-shadow: 0 0 5px var(--purpura);
+        .planet-label {
+            font-size: 0.7rem;
             text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--lavanda);
+            white-space: nowrap;
         }
 
-        /* --- PANTALLA 2: VISTA DE SUPERFICIE (OCULTA POR DEFECTO) --- */
-        #surface-view {
-            width: 100vw;
-            height: 100vh;
+        /* --- VISTA DE ATERRIZAJE (DENTRO DEL PLANETA) --- */
+        #landing-view {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 20;
+            display: none; /* Oculto inicialmente */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             background-size: cover;
             background-position: center;
-            position: absolute;
-            top: 0; left: 0;
-            opacity: 0; /* Empieza invisible */
-            pointer-events: none; /* No clickable hasta que aparezca */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 1.5s;
         }
 
-        #btn-exit {
-            position: absolute;
-            top: 30px;
-            right: 50px;
-            background: transparent;
-            border: 2px solid var(--neon);
-            color: var(--neon);
-            padding: 10px 20px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: bold;
-            text-transform: uppercase;
-            box-shadow: 0 0 10px var(--purpura);
+        .info-card {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 30px;
+            border-radius: 30px;
+            border: 2px solid var(--purpura);
+            backdrop-filter: blur(10px);
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 0 50px var(--purpura);
         }
 
-        #btn-exit:hover {
+        .btn-exit {
+            margin-top: 20px;
+            padding: 10px 30px;
             background: var(--purpura);
             color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
         }
 
-        .surface-title {
-            background: rgba(0, 0, 0, 0.6);
-            padding: 20px;
-            border-radius: 20px;
-            border-left: 5px solid var(--lavanda);
-            font-size: 1.5rem;
-            color: var(--neon);
-        }
     </style>
 </head>
 <body>
 
-    <div id="star-map">
-        <div class="galaxy-title">GALAXY-LUNA</div>
+    <div id="starfield"></div>
 
-        <div class="planet-icon" style="top: 20%; left: 30%;" onclick="land('icono_agua.png', 'Planeta Oceanus Neón', 'Un mundo infinito de agua luminiscente y burbujas de luz.')">
-            <img src="icono_agua.png" alt="Mundo Agua">
-            <span class="planet-name">Oceanus Neón</span>
-        </div>
-
-        <div class="planet-icon" style="top: 50%; left: 70%;" onclick="land('icono_choco.png', 'Región Cacao-Sirope', 'Ríos de chocolate fundido que bajan por montañas de cacao.')">
-            <img src="icono_choco.png" alt="Mundo Choco">
-            <span class="planet-name">Cacao-Sirope</span>
-        </div>
-
-        <div class="planet-icon" style="top: 75%; left: 15%;" onclick="land('icono_corazon.png', 'Nébula Latido', 'Atmósfera rosada y suaves latidos rítmicos en el núcleo.')">
-            <img src="icono_corazon.png" alt="Mundo Amor">
-            <span class="planet-name">Nébula Latido</span>
-        </div>
-
-        <div class="planet-icon" style="top: 15%; left: 60%;" onclick="land('icono_musica.png', 'Armonía Estelar', 'Valles sonoros donde la arena suena a arpa y el viento es una sinfonía.')">
-            <img src="icono_musica.png" alt="Mundo Música">
-            <span class="planet-name">Armonía Estelar</span>
-        </div>
-        
-        </div>
-
-    <div id="surface-view">
-        <button id="btn-exit" onclick="takeOff()">Regresar al Mapa</button>
-        <div class="surface-title" id="surface-desc">
-            </div>
-    </div>
-
-    <audio id="sound-scan" src="sounds/scan.mp3"></audio> <script>
-        function land(imagenIcono, nombre, desc) {
-            const map = document.getElementById('star-map');
-            const view = document.getElementById('surface-view');
-            const descText = document.getElementById('surface-desc');
-            const soundScan = document.getElementById('sound-scan');
-
-            // 1. Sonido Pro de Scanner
-            soundScan.play().catch(e => console.log("Añade scan.mp3 en carpeta sounds/ para escuchar"));
-
-            // 2. Transición Pro: El mapa se oculta, la superficie aparece
-            map.style.opacity = '0';
-            map.style.pointerEvents = 'none';
-
-            setTimeout(() => {
-                // 3. Cargar la imagen de superficie y la descripción
-                // Truco Pro: Reemplazar 'icono' por 'superficie' en el nombre de la imagen
-                view.style.backgroundImage = `url(${imagenIcono.replace('icono', 'superficie')})`;
-                descText.innerHTML = `<b>ATERRIZAJE EXITOSO:</b><br>${nombre}<br><p style="font-size:0.9rem;">${desc}</p>`;
-                
-                view.style.opacity = '1';
-                view.style.pointerEvents = 'auto';
-            }, 1000); // Esperar a que el mapa se oculte
-        }
-
-        function takeOff() {
-            const map = document.getElementById('star-map');
-            const view = document.getElementById('surface-view');
-
-            // 1. Transición Inversa: La superficie se oculta, el mapa vuelve
-            view.style.opacity = '0';
-            view.style.pointerEvents = 'none';
-
-            setTimeout(() => {
-                map.style.opacity = '1';
-                map.style.pointerEvents = 'auto';
-            }, 1000);
-        }
-    </script>
-</body>
-</html>
+    <div id="galaxy-map">
