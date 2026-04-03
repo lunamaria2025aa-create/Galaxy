@@ -2,224 +2,161 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>GALAXY-LUNA 🌌 PRO SYSTEM</title>
+    <title>Pixel Dress-Up Studio 🎀</title>
     <style>
+        :root {
+            --piel: #ffdbac;
+            --lavanda: #b39ddb;
+            --obscuro: #2c2c2c;
+            --rosa: #f48fb1;
+        }
+
         body {
-            margin: 0;
-            background: #050210;
-            color: white;
-            font-family: 'Courier New', Courier, monospace;
-            overflow: hidden;
-            width: 100vw;
-            height: 100vh;
-        }
-
-        /* FONDO DE ESTRELLAS */
-        #stars {
-            position: fixed;
-            width: 100%; height: 100%;
-            background: radial-gradient(circle at center, #1a0b2e 0%, #050210 100%);
-            z-index: -1;
-        }
-
-        .titulo {
-            text-align: center;
-            padding-top: 40px;
-            letter-spacing: 15px;
-            color: #b39ddb;
-            text-shadow: 0 0 20px #7e57c2, 0 0 40px #7e57c2;
-            font-size: 3.5rem;
-            text-transform: uppercase;
-            margin: 0;
-        }
-
-        /* CONTENEDOR DE LA GALAXIA */
-        #galaxy-map {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 1s;
-        }
-
-        /* PLANETAS PRO */
-        .planeta {
-            position: absolute;
-            cursor: pointer;
+            background-color: #f3e5f5;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        /* CONTENEDOR PRINCIPAL */
+        .game-container {
+            display: flex;
+            background: white;
+            padding: 20px;
+            border: 4px solid var(--obscuro);
+            box-shadow: 10px 10px 0px var(--lavanda);
+        }
+
+        /* ÁREA DEL PERSONAJE */
+        .character-preview {
+            width: 200px;
+            height: 300px;
+            background: #eee;
+            position: relative;
+            border: 2px solid #ccc;
+            margin-right: 20px;
+            overflow: hidden;
+        }
+
+        /* --- CUERPO BASE (PROGRAMADO) --- */
+        .base {
+            position: absolute;
+            bottom: 50px; left: 75px;
+            width: 50px; height: 120px;
+            background: var(--piel);
+            border-radius: 10px;
+        }
+        .cabeza {
+            position: absolute;
+            bottom: 170px; left: 70px;
+            width: 60px; height: 60px;
+            background: var(--piel);
+            border-radius: 15px;
+        }
+
+        /* --- CAPAS DE ROPA --- */
+        .layer {
+            position: absolute;
+            display: none; /* Ocultas por defecto */
             z-index: 10;
         }
 
-        .planeta:hover .esfera {
-            transform: scale(1.4);
-            box-shadow: 0 0 50px white;
+        /* Ropa Programada con CSS */
+        #camisa-lila { 
+            width: 54px; height: 60px; 
+            background: var(--lavanda); 
+            bottom: 110px; left: 73px; 
+            border-radius: 5px;
+        }
+        #camisa-negra { 
+            width: 54px; height: 60px; 
+            background: var(--obscuro); 
+            bottom: 110px; left: 73px; 
+        }
+        #falda-rosa {
+            width: 60px; height: 40px;
+            background: var(--rosa);
+            bottom: 75px; left: 70px;
+            border-radius: 0 0 10px 10px;
         }
 
-        .esfera {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            margin-bottom: 10px;
-            transition: 0.4s;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .nombre {
-            font-size: 0.8rem;
-            color: #e1bee7;
-            text-shadow: 0 0 10px #7e57c2;
-            font-weight: bold;
-            letter-spacing: 2px;
-        }
-
-        /* VISTA DE ATERRIZAJE (PRO) */
-        #vista-planeta {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            display: none;
-            z-index: 100;
+        /* MENÚ DE SELECCIÓN */
+        .menu {
+            display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: radial-gradient(circle, rgba(126, 87, 194, 0.2) 0%, #050210 100%);
-            opacity: 0;
-            transition: opacity 0.8s;
+            gap: 10px;
         }
 
-        .caja-info {
-            border: 2px solid #b39ddb;
-            padding: 50px;
-            border-radius: 40px;
-            background: rgba(10, 5, 20, 0.8);
-            backdrop-filter: blur(15px);
-            box-shadow: 0 0 60px #7e57c2;
-            text-align: center;
-            max-width: 600px;
-        }
-
-        .btn-regresar {
-            margin-top: 30px;
-            padding: 15px 40px;
-            background: transparent;
-            color: #b39ddb;
-            border: 2px solid #b39ddb;
-            border-radius: 50px;
-            cursor: pointer;
+        .category-title {
             font-weight: bold;
-            text-transform: uppercase;
-            transition: 0.3s;
+            font-size: 0.8rem;
+            color: var(--purpura);
+            margin-bottom: 5px;
         }
 
-        .btn-regresar:hover {
-            background: #7e57c2;
-            color: white;
-            box-shadow: 0 0 20px #7e57c2;
+        button {
+            padding: 8px;
+            cursor: pointer;
+            border: 2px solid var(--obscuro);
+            background: white;
+            transition: 0.2s;
         }
 
-        /* INTERFAZ DE NAVE (LÍNEAS DE RADAR) */
-        .radar-line {
-            position: fixed;
-            width: 100%; height: 1px;
-            background: rgba(179, 157, 219, 0.1);
-            top: 50%;
-            z-index: 5;
-            pointer-events: none;
+        button:hover {
+            background: var(--lavanda);
+            transform: translateX(5px);
         }
     </style>
 </head>
 <body>
 
-    <div id="stars"></div>
-    <div class="radar-line"></div>
-    <h1 class="titulo">Galaxy-Luna</h1>
+    <div class="game-container">
+        <div class="character-preview">
+            <div class="cabeza"></div>
+            <div class="base"></div>
 
-    <div id="galaxy-map">
-        <div class="planeta" style="top: 20%; left: 15%;" onclick="entrar('Agua', '#00d4ff', 'Has aterrizado en el Océano Neón. Aquí el agua brilla con luz propia y puedes respirar bajo ella.')">
-            <div class="esfera" style="background: radial-gradient(circle at 30% 30%, #00d4ff, #003a47); box-shadow: 0 0 30px #00d4ff;"></div>
-            <div class="nombre">Galaxy-Agua</div>
+            <div id="camisa-lila" class="layer"></div>
+            <div id="camisa-negra" class="layer"></div>
+            <div id="falda-rosa" class="layer"></div>
         </div>
 
-        <div class="planeta" style="top: 55%; left: 75%;" onclick="entrar('Chocolate', '#795548', '¡Bienvenida al Valle Cacao! Cuidado con los ríos de sirope hirviendo y las nubes de canela.')">
-            <div class="esfera" style="background: radial-gradient(circle at 30% 30%, #8d6e63, #2d1b0e); box-shadow: 0 0 30px #5d4037;"></div>
-            <div class="nombre">Galaxy-Choco</div>
-        </div>
+        <div class="menu">
+            <div class="category-title">Partes de Arriba</div>
+            <button onclick="poner('camisa-lila', 'tops')">Top Lavanda</button>
+            <button onclick="poner('camisa-negra', 'tops')">Top Dark</button>
+            <button onclick="quitar('tops')">❌ Quitar Top</button>
 
-        <div class="planeta" style="top: 25%; left: 80%;" onclick="entrar('Love', '#ff4081', 'En el núcleo de Love-Luna, todo vibra al ritmo de un latido constante y pacífico.')">
-            <div class="esfera" style="background: radial-gradient(circle at 30% 30%, #ff4081, #7a0029); box-shadow: 0 0 30px #ff4081;"></div>
-            <div class="nombre">Galaxy-Love</div>
-        </div>
-
-        <div class="planeta" style="top: 45%; left: 45%;" onclick="entrar('Música', '#ffeb3b', 'Las montañas aquí son ecualizadores gigantes que se mueven con tu voz.')">
-            <div class="esfera" style="background: radial-gradient(circle at 30% 30%, #ffeb3b, #827717); box-shadow: 0 0 30px #fbc02d;"></div>
-            <div class="nombre">Galaxy-Music</div>
-        </div>
-
-        <div class="planeta" style="top: 80%; left: 15%;" onclick="entrar('Nature', '#00e676', 'Bosques de cristal que crecen con la luz de las estrellas lilas.')">
-            <div class="esfera" style="background: radial-gradient(circle at 30% 30%, #00e676, #004d40); box-shadow: 0 0 30px #00e676;"></div>
-            <div class="nombre">Galaxy-Nature</div>
-        </div>
-
-        <div class="planeta" style="top: 85%; left: 55%;" onclick="entrar('Candy', '#f06292', 'Cuidado: el suelo es pegajoso, pero las nubes de algodón de azúcar son deliciosas.')">
-            <div class="esfera" style="background: radial-gradient(circle at 30% 30%, #f06292, #880e4f); box-shadow: 0 0 30px #f06292;"></div>
-            <div class="nombre">Galaxy-Candy</div>
-        </div>
-    </div>
-
-    <div id="vista-planeta">
-        <div class="caja-info">
-            <h1 id="titulo-p" style="font-size: 3rem; margin: 0;"></h1>
-            <p id="desc-p" style="font-size: 1.2rem; margin: 20px 0; color: #d1c4e9;"></p>
-            <button class="btn-regresar" onclick="salir()">🚀 Despegar Nave</button>
+            <div class="category-title">Partes de Abajo</div>
+            <button onclick="poner('falda-rosa', 'bottoms')">Falda Rosa</button>
+            <button onclick="quitar('bottoms')">❌ Quitar Falda</button>
         </div>
     </div>
 
     <script>
-        function entrar(nombre, color, desc) {
-            const map = document.getElementById('galaxy-map');
-            const vista = document.getElementById('vista-planeta');
-            
-            // EFECTO PRO: Zoom y desaparición
-            map.style.transform = "scale(4)";
-            map.style.opacity = "0";
-            
-            setTimeout(() => {
-                vista.style.display = 'flex';
-                setTimeout(() => vista.style.opacity = "1", 50);
-                
-                document.getElementById('titulo-p').innerText = "SECTOR: " + nombre;
-                document.getElementById('titulo-p').style.color = color;
-                document.getElementById('titulo-p').style.textShadow = `0 0 20px ${color}`;
-                document.getElementById('desc-p').innerText = desc;
-            }, 800);
+        // Diccionario para saber qué ropa pertenece a qué categoría
+        const categorias = {
+            'camisa-lila': 'tops',
+            'camisa-negra': 'tops',
+            'falda-rosa': 'bottoms'
+        };
+
+        function poner(idRopa, categoria) {
+            // Primero quitamos lo que haya en esa categoría para que no se encime
+            quitar(categoria);
+            // Mostramos la prenda seleccionada
+            document.getElementById(idRopa).style.display = 'block';
         }
 
-        function salir() {
-            const map = document.getElementById('galaxy-map');
-            const vista = document.getElementById('vista-planeta');
-            
-            vista.style.opacity = "0";
-            setTimeout(() => {
-                vista.style.display = 'none';
-                map.style.transform = "scale(1)";
-                map.style.opacity = "1";
-            }, 800);
-        }
-
-        // Crear puntitos de estrellas extras
-        const starsContainer = document.getElementById('stars');
-        for (let i = 0; i < 150; i++) {
-            const s = document.createElement('div');
-            s.style.position = 'absolute';
-            s.style.width = '2px';
-            s.style.height = '2px';
-            s.style.background = 'white';
-            s.style.borderRadius = '50%';
-            s.style.top = Math.random() * 100 + '%';
-            s.style.left = Math.random() * 100 + '%';
-            s.style.opacity = Math.random();
-            starsContainer.appendChild(s);
+        function quitar(categoria) {
+            // Buscamos todas las capas y ocultamos las de la categoría
+            for (let id in categorias) {
+                if (categorias[id] === categoria) {
+                    document.getElementById(id).style.display = 'none';
+                }
+            }
         }
     </script>
 </body>
