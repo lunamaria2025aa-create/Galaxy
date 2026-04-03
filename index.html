@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Nave Gemini: Exploración Galáctica 💜</title>
+    <title>Mapa Estelar: GALAXY-LUNA 🌌</title>
     <style>
         :root {
             --purpura: #7e57c2;
@@ -12,136 +12,180 @@
 
         body {
             margin: 0;
-            background: #050210;
+            background: #050210; /* Negro profundo espacial */
             color: white;
-            font-family: 'Orbitron', sans-serif; /* Fuente futurista */
+            font-family: 'Courier New', Courier, monospace; /* Fuente estilo código */
+            overflow: hidden;
             display: flex;
             flex-direction: column;
-            align-items: center;
+        }
+
+        /* --- PANTALLA 1: EL MAPA GALAXY-LUNA --- */
+        #star-map {
+            width: 100vw;
             height: 100vh;
-            overflow: hidden;
-        }
-
-        /* VISTA DE LA GALAXIA (LA VENTANA) */
-        #viewport {
-            width: 90%;
-            height: 60vh;
-            margin-top: 20px;
-            border: 4px solid var(--purpura);
-            border-radius: 50px 50px 0 0;
+            background: url('stardust.png'); /* Opcional: un fondo de estrellas */
             position: relative;
-            background: radial-gradient(circle, #2e1a47 0%, #050210 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 0 50px rgba(126, 87, 194, 0.5);
-            overflow: hidden;
+            cursor: crosshair;
+            transition: opacity 1s;
         }
 
-        /* EL PLANETA QUE APARECE */
-        #planet-view {
-            width: 250px;
-            height: 250px;
-            border-radius: 50%;
-            transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-            filter: drop-shadow(0 0 30px white);
-            transform: scale(0); /* Empieza oculto */
+        .galaxy-title {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2.5rem;
+            color: var(--neon);
+            text-transform: uppercase;
+            letter-spacing: 10px;
+            text-shadow: 0 0 20px var(--purpura);
         }
 
-        /* TABLERO DE CONTROL */
-        #dashboard {
-            width: 100%;
-            height: 40vh;
-            background: linear-gradient(to top, #1a0b2e, #050210);
-            border-top: 5px solid var(--purpura);
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .btn-planet {
-            background: rgba(126, 87, 194, 0.2);
-            border: 2px solid var(--lavanda);
-            color: var(--lavanda);
-            padding: 15px;
-            border-radius: 15px;
+        /* ESTILO PRO PARA PLANETAS REGADOS */
+        .planet-icon {
+            position: absolute;
             cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
+            transition: transform 0.3s;
+            text-align: center;
+        }
+
+        .planet-icon img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--lavanda);
+        }
+
+        .planet-icon:hover {
+            transform: scale(1.3);
+        }
+
+        .planet-name {
+            display: block;
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: var(--lavanda);
+            text-shadow: 0 0 5px var(--purpura);
             text-transform: uppercase;
         }
 
-        .btn-planet:hover {
+        /* --- PANTALLA 2: VISTA DE SUPERFICIE (OCULTA POR DEFECTO) --- */
+        #surface-view {
+            width: 100vw;
+            height: 100vh;
+            background-size: cover;
+            background-position: center;
+            position: absolute;
+            top: 0; left: 0;
+            opacity: 0; /* Empieza invisible */
+            pointer-events: none; /* No clickable hasta que aparezca */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1.5s;
+        }
+
+        #btn-exit {
+            position: absolute;
+            top: 30px;
+            right: 50px;
+            background: transparent;
+            border: 2px solid var(--neon);
+            color: var(--neon);
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            box-shadow: 0 0 10px var(--purpura);
+        }
+
+        #btn-exit:hover {
             background: var(--purpura);
             color: white;
-            box-shadow: 0 0 20px var(--lavanda);
-            transform: translateY(-5px);
         }
 
-        /* DESCRIPCIÓN DEL DESTINO */
-        #mission-log {
-            position: absolute;
-            bottom: 20px;
-            left: 50px;
-            right: 50px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 15px;
-            border-radius: 10px;
+        .surface-title {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 20px;
             border-left: 5px solid var(--lavanda);
-            font-size: 0.9rem;
-        }
-
-        /* ANIMACIÓN DE VIAJE */
-        .hyperspace {
-            animation: warp 1.5s infinite;
-        }
-
-        @keyframes warp {
-            0% { box-shadow: 0 0 0px var(--lavanda); }
-            50% { box-shadow: 0 0 100px var(--purpura); }
-            100% { box-shadow: 0 0 0px var(--lavanda); }
+            font-size: 1.5rem;
+            color: var(--neon);
         }
     </style>
 </head>
 <body>
 
-    <div id="viewport">
-        <div id="planet-view"></div>
-        <div id="mission-log">
-            <b style="color: var(--lavanda);">SISTEMA DE NAVEGACIÓN:</b> Esperando coordenadas de destino...
+    <div id="star-map">
+        <div class="galaxy-title">GALAXY-LUNA</div>
+
+        <div class="planet-icon" style="top: 20%; left: 30%;" onclick="land('icono_agua.png', 'Planeta Oceanus Neón', 'Un mundo infinito de agua luminiscente y burbujas de luz.')">
+            <img src="icono_agua.png" alt="Mundo Agua">
+            <span class="planet-name">Oceanus Neón</span>
         </div>
+
+        <div class="planet-icon" style="top: 50%; left: 70%;" onclick="land('icono_choco.png', 'Región Cacao-Sirope', 'Ríos de chocolate fundido que bajan por montañas de cacao.')">
+            <img src="icono_choco.png" alt="Mundo Choco">
+            <span class="planet-name">Cacao-Sirope</span>
+        </div>
+
+        <div class="planet-icon" style="top: 75%; left: 15%;" onclick="land('icono_corazon.png', 'Nébula Latido', 'Atmósfera rosada y suaves latidos rítmicos en el núcleo.')">
+            <img src="icono_corazon.png" alt="Mundo Amor">
+            <span class="planet-name">Nébula Latido</span>
+        </div>
+
+        <div class="planet-icon" style="top: 15%; left: 60%;" onclick="land('icono_musica.png', 'Armonía Estelar', 'Valles sonoros donde la arena suena a arpa y el viento es una sinfonía.')">
+            <img src="icono_musica.png" alt="Mundo Música">
+            <span class="planet-name">Armonía Estelar</span>
+        </div>
+        
+        </div>
+
+    <div id="surface-view">
+        <button id="btn-exit" onclick="takeOff()">Regresar al Mapa</button>
+        <div class="surface-title" id="surface-desc">
+            </div>
     </div>
 
-    <div id="dashboard">
-        <button class="btn-planet" onclick="travel('Agua', '#4fc3f7', '💧 Océanos infinitos de cristal neón detectados.')">🌊 Mundo Agua</button>
-        <button class="btn-planet" onclick="travel('Chocolate', '#795548', '🍫 Lluvia de cacao y ríos de caramelo líquido.')">🍫 Mundo Choco</button>
-        <button class="btn-planet" onclick="travel('Corazón', '#ff4081', '💖 Latidos rítmicos detectados en el núcleo.')">💖 Mundo Amor</button>
-        <button class="btn-planet" onclick="travel('Bosque', '#00e676', '🌳 Árboles bioluminiscentes cantando al viento.')">🌳 Mundo Árbol</button>
-        <button class="btn-planet" onclick="travel('Música', '#ffea00', '🎵 Ondas sonoras visibles en la atmósfera.')">🎵 Mundo Música</button>
-        <button class="btn-planet" onclick="travel('Caramelo', '#f06292', '🍭 Nubes de algodón y suelo de gominola.')">🍭 Mundo Dulce</button>
-    </div>
+    <audio id="sound-scan" src="sounds/scan.mp3"></audio> <script>
+        function land(imagenIcono, nombre, desc) {
+            const map = document.getElementById('star-map');
+            const view = document.getElementById('surface-view');
+            const descText = document.getElementById('surface-desc');
+            const soundScan = document.getElementById('sound-scan');
 
-    <script>
-        function travel(tipo, color, log) {
-            const planet = document.getElementById('planet-view');
-            const missionLog = document.getElementById('mission-log');
-            const viewport = document.getElementById('viewport');
+            // 1. Sonido Pro de Scanner
+            soundScan.play().catch(e => console.log("Añade scan.mp3 en carpeta sounds/ para escuchar"));
 
-            // 1. Efecto de Salto (Warp)
-            viewport.classList.add('hyperspace');
-            planet.style.transform = "scale(0) rotate(180deg)";
-            missionLog.innerHTML = `<b style="color: white;">SALTANDO AL ESPACIO...</b>`;
+            // 2. Transición Pro: El mapa se oculta, la superficie aparece
+            map.style.opacity = '0';
+            map.style.pointerEvents = 'none';
 
             setTimeout(() => {
-                // 2. Llegada al destino
-                viewport.classList.remove('hyperspace');
-                planet.style.background = `radial-gradient(circle, ${color} 0%, #000 100%)`;
-                planet.style.boxShadow = `0 0 50px ${color}`;
-                planet.style.transform = "scale(1.2) rotate(0deg)";
-                missionLog.innerHTML = `<b style="color: ${color};">DESTINO: PLANETA ${tipo.toUpperCase()}</b><br>${log}`;
-            }, 1500);
+                // 3. Cargar la imagen de superficie y la descripción
+                // Truco Pro: Reemplazar 'icono' por 'superficie' en el nombre de la imagen
+                view.style.backgroundImage = `url(${imagenIcono.replace('icono', 'superficie')})`;
+                descText.innerHTML = `<b>ATERRIZAJE EXITOSO:</b><br>${nombre}<br><p style="font-size:0.9rem;">${desc}</p>`;
+                
+                view.style.opacity = '1';
+                view.style.pointerEvents = 'auto';
+            }, 1000); // Esperar a que el mapa se oculte
+        }
+
+        function takeOff() {
+            const map = document.getElementById('star-map');
+            const view = document.getElementById('surface-view');
+
+            // 1. Transición Inversa: La superficie se oculta, el mapa vuelve
+            view.style.opacity = '0';
+            view.style.pointerEvents = 'none';
+
+            setTimeout(() => {
+                map.style.opacity = '1';
+                map.style.pointerEvents = 'auto';
+            }, 1000);
         }
     </script>
 </body>
