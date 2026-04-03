@@ -2,123 +2,157 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GALAXY-LUNA 🌌 Pro System</title>
+    <title>GALAXY-LUNA 🌌</title>
     <style>
-        :root {
-            --purpura: #7e57c2;
-            --lavanda: #b39ddb;
-            --espacio: #050210;
-        }
-
-        body, html {
-            margin: 0; padding: 0;
-            width: 100%; height: 100%;
-            background-color: var(--espacio);
+        body {
+            margin: 0;
+            background: #050210;
             color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Arial, sans-serif;
             overflow: hidden;
+            width: 100vw;
+            height: 100vh;
         }
 
-        /* --- FONDO DE ESTRELLAS ANIMADO --- */
-        #starfield {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 0;
-            background: radial-gradient(circle at center, #1a0b2e 0%, #050210 100%);
-        }
-
-        /* --- CAPA DEL MAPA GALAXY-LUNA --- */
-        #galaxy-map {
-            position: relative;
-            z-index: 10;
-            width: 100%; height: 100%;
-            transition: transform 1.2s cubic-bezier(0.7, 0, 0.3, 1), opacity 1s;
-        }
-
-        .header {
-            position: absolute;
-            top: 40px; width: 100%;
+        /* Título Principal */
+        .titulo {
             text-align: center;
-            letter-spacing: 12px;
-            font-size: 2.5rem;
-            color: var(--lavanda);
-            text-shadow: 0 0 20px var(--purpura);
+            margin-top: 50px;
+            letter-spacing: 10px;
+            color: #b39ddb;
+            text-shadow: 0 0 20px #7e57c2;
+            font-size: 3rem;
             text-transform: uppercase;
         }
 
-        /* --- ESTILO DE LOS PLANETAS --- */
-        .planet {
+        /* Contenedor de la Galaxia */
+        #galaxy-map {
+            position: relative;
+            width: 100%;
+            height: 80%;
+            transition: 1s;
+        }
+
+        /* Estilo de los Planetas (Bolas de colores con brillo) */
+        .planeta {
             position: absolute;
-            width: 80px; height: 80px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             cursor: pointer;
-            transition: 0.4s;
+            transition: 0.3s;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
         }
 
-        .planet:hover {
-            transform: scale(1.4);
-            z-index: 100;
+        .planeta:hover {
+            transform: scale(1.3);
         }
 
-        .planet-sphere {
-            width: 50px; height: 50px;
+        .esfera {
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            box-shadow: inset -10px -10px 20px rgba(0,0,0,0.5);
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
-        .planet-label {
+        .nombre {
             font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--lavanda);
+            color: #e1bee7;
+            text-align: center;
             white-space: nowrap;
         }
 
-        /* --- VISTA DE ATERRIZAJE (DENTRO DEL PLANETA) --- */
-        #landing-view {
+        /* Vista cuando entras al planeta */
+        #vista-planeta {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 20;
-            display: none; /* Oculto inicialmente */
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: none;
+            background: rgba(0,0,0,0.9);
+            z-index: 100;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background-size: cover;
-            background-position: center;
-        }
-
-        .info-card {
-            background: rgba(0, 0, 0, 0.8);
-            padding: 30px;
-            border-radius: 30px;
-            border: 2px solid var(--purpura);
-            backdrop-filter: blur(10px);
-            max-width: 500px;
             text-align: center;
-            box-shadow: 0 0 50px var(--purpura);
+            padding: 20px;
         }
 
-        .btn-exit {
+        .caja-info {
+            border: 2px solid #b39ddb;
+            padding: 40px;
+            border-radius: 30px;
+            background: rgba(46, 26, 71, 0.5);
+            box-shadow: 0 0 30px #7e57c2;
+        }
+
+        button {
             margin-top: 20px;
-            padding: 10px 30px;
-            background: var(--purpura);
+            padding: 10px 20px;
+            background: #7e57c2;
             color: white;
             border: none;
-            border-radius: 20px;
+            border-radius: 10px;
             cursor: pointer;
-            font-weight: bold;
         }
-
     </style>
 </head>
 <body>
 
-    <div id="starfield"></div>
+    <h1 class="titulo">Galaxy-Luna</h1>
 
     <div id="galaxy-map">
+        <div class="planeta" style="top: 10%; left: 20%;" onclick="entrar('Agua', '#00d4ff', '🌊 Mundo de Agua: Océanos neón que brillan en la oscuridad.')">
+            <div class="esfera" style="background: radial-gradient(circle, #00d4ff, #005f73); box-shadow: 0 0 20px #00d4ff;"></div>
+            <div class="nombre">Galaxy-Agua</div>
+        </div>
+
+        <div class="planeta" style="top: 50%; left: 70%;" onclick="entrar('Chocolate', '#795548', '🍫 Mundo Chocolate: Montañas de brownie y ríos de sirope.')">
+            <div class="esfera" style="background: radial-gradient(circle, #8d6e63, #3e2723); box-shadow: 0 0 20px #5d4037;"></div>
+            <div class="nombre">Galaxy-Choco</div>
+        </div>
+
+        <div class="planeta" style="top: 20%; left: 75%;" onclick="entrar('Corazones', '#ff4081', '💖 Mundo Corazón: Todo es rosado y suena música romántica.')">
+            <div class="esfera" style="background: radial-gradient(circle, #f06292, #880e4f); box-shadow: 0 0 20px #ff4081;"></div>
+            <div class="nombre">Galaxy-Love</div>
+        </div>
+
+        <div class="planeta" style="top: 70%; left: 15%;" onclick="entrar('Árboles', '#00e676', '🌳 Mundo Árbol: Bosques que brillan en color lila.')">
+            <div class="esfera" style="background: radial-gradient(circle, #00e676, #1b5e20); box-shadow: 0 0 20px #00e676;"></div>
+            <div class="nombre">Galaxy-Nature</div>
+        </div>
+
+        <div class="planeta" style="top: 40%; left: 45%;" onclick="entrar('Música', '#ffeb3b', '🎵 Mundo Música: El suelo suena como un piano al caminar.')">
+            <div class="esfera" style="background: radial-gradient(circle, #fff176, #f57f17); box-shadow: 0 0 20px #ffeb3b;"></div>
+            <div class="nombre">Galaxy-Music</div>
+        </div>
+
+        <div class="planeta" style="top: 75%; left: 50%;" onclick="entrar('Caramelo', '#f06292', '🍭 Mundo Caramelo: Nubes de algodón de azúcar.')">
+            <div class="esfera" style="background: radial-gradient(circle, #f48fb1, #ad1457); box-shadow: 0 0 20px #f06292;"></div>
+            <div class="nombre">Galaxy-Candy</div>
+        </div>
+    </div>
+
+    <div id="vista-planeta">
+        <div class="caja-info">
+            <h1 id="titulo-p"></h1>
+            <p id="desc-p"></p>
+            <button onclick="salir()">🚀 Volver a la Nave</button>
+        </div>
+    </div>
+
+    <script>
+        function entrar(nombre, color, desc) {
+            document.getElementById('vista-planeta').style.display = 'flex';
+            document.getElementById('titulo-p').innerText = "Aterrizando en " + nombre;
+            document.getElementById('titulo-p').style.color = color;
+            document.getElementById('desc-p').innerText = desc;
+            document.getElementById('galaxy-map').style.opacity = '0';
+        }
+
+        function salir() {
+            document.getElementById('vista-planeta').style.display = 'none';
+            document.getElementById('galaxy-map').style.opacity = '1';
+        }
+    </script
