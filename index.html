@@ -2,157 +2,225 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>GALAXY-LUNA 🌌</title>
+    <title>GALAXY-LUNA 🌌 PRO SYSTEM</title>
     <style>
         body {
             margin: 0;
             background: #050210;
             color: white;
-            font-family: Arial, sans-serif;
+            font-family: 'Courier New', Courier, monospace;
             overflow: hidden;
             width: 100vw;
             height: 100vh;
         }
 
-        /* Título Principal */
-        .titulo {
-            text-align: center;
-            margin-top: 50px;
-            letter-spacing: 10px;
-            color: #b39ddb;
-            text-shadow: 0 0 20px #7e57c2;
-            font-size: 3rem;
-            text-transform: uppercase;
+        /* FONDO DE ESTRELLAS */
+        #stars {
+            position: fixed;
+            width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #1a0b2e 0%, #050210 100%);
+            z-index: -1;
         }
 
-        /* Contenedor de la Galaxia */
+        .titulo {
+            text-align: center;
+            padding-top: 40px;
+            letter-spacing: 15px;
+            color: #b39ddb;
+            text-shadow: 0 0 20px #7e57c2, 0 0 40px #7e57c2;
+            font-size: 3.5rem;
+            text-transform: uppercase;
+            margin: 0;
+        }
+
+        /* CONTENEDOR DE LA GALAXIA */
         #galaxy-map {
             position: relative;
             width: 100%;
-            height: 80%;
-            transition: 1s;
+            height: 100%;
+            transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 1s;
         }
 
-        /* Estilo de los Planetas (Bolas de colores con brillo) */
+        /* PLANETAS PRO */
         .planeta {
             position: absolute;
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
             cursor: pointer;
-            transition: 0.3s;
             display: flex;
             flex-direction: column;
             align-items: center;
+            z-index: 10;
         }
 
-        .planeta:hover {
-            transform: scale(1.3);
+        .planeta:hover .esfera {
+            transform: scale(1.4);
+            box-shadow: 0 0 50px white;
         }
 
         .esfera {
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
+            transition: 0.4s;
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
         .nombre {
-            font-size: 0.7rem;
+            font-size: 0.8rem;
             color: #e1bee7;
-            text-align: center;
-            white-space: nowrap;
+            text-shadow: 0 0 10px #7e57c2;
+            font-weight: bold;
+            letter-spacing: 2px;
         }
 
-        /* Vista cuando entras al planeta */
+        /* VISTA DE ATERRIZAJE (PRO) */
         #vista-planeta {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
             display: none;
-            background: rgba(0,0,0,0.9);
             z-index: 100;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            text-align: center;
-            padding: 20px;
+            background: radial-gradient(circle, rgba(126, 87, 194, 0.2) 0%, #050210 100%);
+            opacity: 0;
+            transition: opacity 0.8s;
         }
 
         .caja-info {
             border: 2px solid #b39ddb;
-            padding: 40px;
-            border-radius: 30px;
-            background: rgba(46, 26, 71, 0.5);
-            box-shadow: 0 0 30px #7e57c2;
+            padding: 50px;
+            border-radius: 40px;
+            background: rgba(10, 5, 20, 0.8);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 0 60px #7e57c2;
+            text-align: center;
+            max-width: 600px;
         }
 
-        button {
-            margin-top: 20px;
-            padding: 10px 20px;
+        .btn-regresar {
+            margin-top: 30px;
+            padding: 15px 40px;
+            background: transparent;
+            color: #b39ddb;
+            border: 2px solid #b39ddb;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+
+        .btn-regresar:hover {
             background: #7e57c2;
             color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
+            box-shadow: 0 0 20px #7e57c2;
+        }
+
+        /* INTERFAZ DE NAVE (LÍNEAS DE RADAR) */
+        .radar-line {
+            position: fixed;
+            width: 100%; height: 1px;
+            background: rgba(179, 157, 219, 0.1);
+            top: 50%;
+            z-index: 5;
+            pointer-events: none;
         }
     </style>
 </head>
 <body>
 
+    <div id="stars"></div>
+    <div class="radar-line"></div>
     <h1 class="titulo">Galaxy-Luna</h1>
 
     <div id="galaxy-map">
-        <div class="planeta" style="top: 10%; left: 20%;" onclick="entrar('Agua', '#00d4ff', '🌊 Mundo de Agua: Océanos neón que brillan en la oscuridad.')">
-            <div class="esfera" style="background: radial-gradient(circle, #00d4ff, #005f73); box-shadow: 0 0 20px #00d4ff;"></div>
+        <div class="planeta" style="top: 20%; left: 15%;" onclick="entrar('Agua', '#00d4ff', 'Has aterrizado en el Océano Neón. Aquí el agua brilla con luz propia y puedes respirar bajo ella.')">
+            <div class="esfera" style="background: radial-gradient(circle at 30% 30%, #00d4ff, #003a47); box-shadow: 0 0 30px #00d4ff;"></div>
             <div class="nombre">Galaxy-Agua</div>
         </div>
 
-        <div class="planeta" style="top: 50%; left: 70%;" onclick="entrar('Chocolate', '#795548', '🍫 Mundo Chocolate: Montañas de brownie y ríos de sirope.')">
-            <div class="esfera" style="background: radial-gradient(circle, #8d6e63, #3e2723); box-shadow: 0 0 20px #5d4037;"></div>
+        <div class="planeta" style="top: 55%; left: 75%;" onclick="entrar('Chocolate', '#795548', '¡Bienvenida al Valle Cacao! Cuidado con los ríos de sirope hirviendo y las nubes de canela.')">
+            <div class="esfera" style="background: radial-gradient(circle at 30% 30%, #8d6e63, #2d1b0e); box-shadow: 0 0 30px #5d4037;"></div>
             <div class="nombre">Galaxy-Choco</div>
         </div>
 
-        <div class="planeta" style="top: 20%; left: 75%;" onclick="entrar('Corazones', '#ff4081', '💖 Mundo Corazón: Todo es rosado y suena música romántica.')">
-            <div class="esfera" style="background: radial-gradient(circle, #f06292, #880e4f); box-shadow: 0 0 20px #ff4081;"></div>
+        <div class="planeta" style="top: 25%; left: 80%;" onclick="entrar('Love', '#ff4081', 'En el núcleo de Love-Luna, todo vibra al ritmo de un latido constante y pacífico.')">
+            <div class="esfera" style="background: radial-gradient(circle at 30% 30%, #ff4081, #7a0029); box-shadow: 0 0 30px #ff4081;"></div>
             <div class="nombre">Galaxy-Love</div>
         </div>
 
-        <div class="planeta" style="top: 70%; left: 15%;" onclick="entrar('Árboles', '#00e676', '🌳 Mundo Árbol: Bosques que brillan en color lila.')">
-            <div class="esfera" style="background: radial-gradient(circle, #00e676, #1b5e20); box-shadow: 0 0 20px #00e676;"></div>
-            <div class="nombre">Galaxy-Nature</div>
-        </div>
-
-        <div class="planeta" style="top: 40%; left: 45%;" onclick="entrar('Música', '#ffeb3b', '🎵 Mundo Música: El suelo suena como un piano al caminar.')">
-            <div class="esfera" style="background: radial-gradient(circle, #fff176, #f57f17); box-shadow: 0 0 20px #ffeb3b;"></div>
+        <div class="planeta" style="top: 45%; left: 45%;" onclick="entrar('Música', '#ffeb3b', 'Las montañas aquí son ecualizadores gigantes que se mueven con tu voz.')">
+            <div class="esfera" style="background: radial-gradient(circle at 30% 30%, #ffeb3b, #827717); box-shadow: 0 0 30px #fbc02d;"></div>
             <div class="nombre">Galaxy-Music</div>
         </div>
 
-        <div class="planeta" style="top: 75%; left: 50%;" onclick="entrar('Caramelo', '#f06292', '🍭 Mundo Caramelo: Nubes de algodón de azúcar.')">
-            <div class="esfera" style="background: radial-gradient(circle, #f48fb1, #ad1457); box-shadow: 0 0 20px #f06292;"></div>
+        <div class="planeta" style="top: 80%; left: 15%;" onclick="entrar('Nature', '#00e676', 'Bosques de cristal que crecen con la luz de las estrellas lilas.')">
+            <div class="esfera" style="background: radial-gradient(circle at 30% 30%, #00e676, #004d40); box-shadow: 0 0 30px #00e676;"></div>
+            <div class="nombre">Galaxy-Nature</div>
+        </div>
+
+        <div class="planeta" style="top: 85%; left: 55%;" onclick="entrar('Candy', '#f06292', 'Cuidado: el suelo es pegajoso, pero las nubes de algodón de azúcar son deliciosas.')">
+            <div class="esfera" style="background: radial-gradient(circle at 30% 30%, #f06292, #880e4f); box-shadow: 0 0 30px #f06292;"></div>
             <div class="nombre">Galaxy-Candy</div>
         </div>
     </div>
 
     <div id="vista-planeta">
         <div class="caja-info">
-            <h1 id="titulo-p"></h1>
-            <p id="desc-p"></p>
-            <button onclick="salir()">🚀 Volver a la Nave</button>
+            <h1 id="titulo-p" style="font-size: 3rem; margin: 0;"></h1>
+            <p id="desc-p" style="font-size: 1.2rem; margin: 20px 0; color: #d1c4e9;"></p>
+            <button class="btn-regresar" onclick="salir()">🚀 Despegar Nave</button>
         </div>
     </div>
 
     <script>
         function entrar(nombre, color, desc) {
-            document.getElementById('vista-planeta').style.display = 'flex';
-            document.getElementById('titulo-p').innerText = "Aterrizando en " + nombre;
-            document.getElementById('titulo-p').style.color = color;
-            document.getElementById('desc-p').innerText = desc;
-            document.getElementById('galaxy-map').style.opacity = '0';
+            const map = document.getElementById('galaxy-map');
+            const vista = document.getElementById('vista-planeta');
+            
+            // EFECTO PRO: Zoom y desaparición
+            map.style.transform = "scale(4)";
+            map.style.opacity = "0";
+            
+            setTimeout(() => {
+                vista.style.display = 'flex';
+                setTimeout(() => vista.style.opacity = "1", 50);
+                
+                document.getElementById('titulo-p').innerText = "SECTOR: " + nombre;
+                document.getElementById('titulo-p').style.color = color;
+                document.getElementById('titulo-p').style.textShadow = `0 0 20px ${color}`;
+                document.getElementById('desc-p').innerText = desc;
+            }, 800);
         }
 
         function salir() {
-            document.getElementById('vista-planeta').style.display = 'none';
-            document.getElementById('galaxy-map').style.opacity = '1';
+            const map = document.getElementById('galaxy-map');
+            const vista = document.getElementById('vista-planeta');
+            
+            vista.style.opacity = "0";
+            setTimeout(() => {
+                vista.style.display = 'none';
+                map.style.transform = "scale(1)";
+                map.style.opacity = "1";
+            }, 800);
         }
-    </script
+
+        // Crear puntitos de estrellas extras
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 150; i++) {
+            const s = document.createElement('div');
+            s.style.position = 'absolute';
+            s.style.width = '2px';
+            s.style.height = '2px';
+            s.style.background = 'white';
+            s.style.borderRadius = '50%';
+            s.style.top = Math.random() * 100 + '%';
+            s.style.left = Math.random() * 100 + '%';
+            s.style.opacity = Math.random();
+            starsContainer.appendChild(s);
+        }
+    </script>
+</body>
+</html>
